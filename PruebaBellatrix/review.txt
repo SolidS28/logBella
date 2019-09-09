@@ -1,0 +1,25 @@
+Posibles errores
+1. It will not log the formatted message
+2. It will print multiple times the same message
+3. It will create unnecesary connections to DB
+4. Trimmed message is not assigned to a variable or used
+5. It will not control if a message should be logged or not
+6. An empty message should not raise an error, it should skip it
+7. If the directory is not created it will generate an error
+8. Duplicate consoleHandler, by default there is already one
+9. It will delete previous log files
+10. No driver register and even if the dbms is an argument, if the driver is not, it may not work
+
+Improvements
+1. Lack of Documentation
+2. Create a Singleton to manage only one Connection if it's necessary
+3. Clean of unused variables
+4. Repeated date use
+5. Return to force end of method
+6. Length == 0, it's better to use empty
+7. Missing params exception are thrown in the use of the class, not in the construction
+8. Unnecesary properties creation
+9. Maybe to make easier implementation of initialization, create a class to wrap dbParam (not implemented, it's just an idea)
+10. Throw runtime exceptions instead of exceptions to avoid a lot of try/catch blocks in the implementation
+11. Creation of the file only when it's necessary
+12. Use of Constants and String formats 
