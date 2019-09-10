@@ -58,7 +58,7 @@ public class JobLogger {
 	 * @param messageText - Message to log
 	 * @param logLevel    - Log level to use
 	 */
-	public static void logMessage(String messageText, JobLevel logLevel) {
+	public void logMessage(String messageText, JobLevel logLevel) {
 		if (messageText != null && !messageText.trim().isEmpty()
 				&& logLevel.getPriority() <= minLogLevel.getPriority()) {
 
@@ -70,7 +70,6 @@ public class JobLogger {
 			}
 
 			if (logToDatabase) {
-				System.out.println(logToDatabase);
 				logIntoDatabase(loggedMessage, logLevel);
 			}
 		}
@@ -83,7 +82,7 @@ public class JobLogger {
 	 * @param loggedMessage
 	 * @param logLevel
 	 */
-	private static void logIntoDatabase(String loggedMessage, JobLevel logLevel) {
+	private void logIntoDatabase(String loggedMessage, JobLevel logLevel) {
 		// Separar responsabilidades
 		setupConnection();
 

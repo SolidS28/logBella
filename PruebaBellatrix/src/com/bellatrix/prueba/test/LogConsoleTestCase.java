@@ -2,8 +2,10 @@ package com.bellatrix.prueba.test;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -11,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,12 +24,12 @@ public class LogConsoleTestCase {
 	private HashMap<String, String> settings;
 	private static final String FILE_PATH = "C:/dev/newdir/x/h";
 
-//	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-//	private final PrintStream originalOut = System.out;
+	private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+	private final PrintStream originalErr = System.err;
 
 	@Before
 	public void setUp() throws Exception {
-		// System.setOut(new PrintStream(outContent));
+		System.setErr(new PrintStream(errContent));
 		settings = new HashMap<>();
 		settings.put(JobLogger.DBMS, "mariadb");
 		settings.put(JobLogger.PASSWORD, "");
@@ -37,6 +40,11 @@ public class LogConsoleTestCase {
 		settings.put(JobLogger.LOG_FILE_FOLDER, FILE_PATH);
 	}
 
+	@After
+	public void restoreStreams() {
+	    System.setErr(originalErr);
+	}
+	
 	@Test
 	public void test() throws IOException, SQLException {
 		File dir = new File(settings.get(JobLogger.LOG_FILE_FOLDER));
@@ -63,8 +71,11 @@ public class LogConsoleTestCase {
 		statement.close();
 
 		JobLogger.getLogger().logMessage("MENSAJE_MESSAGE", JobLevel.MESSAGE);
+		assertTrue(errContent.toString().contains("MENSAJE_MESSAGE"));
 		JobLogger.getLogger().logMessage("MENSAJE_WARNING", JobLevel.WARNING);
+		assertTrue(!errContent.toString().contains("MENSAJE_WARNING"));
 		JobLogger.getLogger().logMessage("MENSAJE_ERROR", JobLevel.ERROR);
+		assertTrue(errContent.toString().contains("MENSAJE_ERROR"));
 		statement = connection.createStatement();
 		rs = statement.executeQuery(sql);
 		while (rs.next()) {
